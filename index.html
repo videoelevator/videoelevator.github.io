@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="VideoElevator: Elevating Video Generation Quality with Versatile Text-to-Image Diffusion Models">
+  <meta name="keywords" content="Video Diffusion Models, Text-to-Video Generation, Plug-and-play">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VideoElevator</title>
+
+<!--   Global site tag (gtag.js) - Google Analytics-->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y5ZVQZ7NHC"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-Y5ZVQZ7NHC');
+  </script> -->
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./assets/css/bulma.min.css">
+  <link rel="stylesheet" href="./assets/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./assets/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./assets/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./assets/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./assets/js/fontawesome.all.min.js"></script>
+  <script src="./assets/js/bulma-carousel.min.js"></script>
+  <script src="./assets/js/bulma-slider.min.js"></script>
+  <script src="./assets/js/index.js"></script>
+
+  <!-- custom css file  -->
+  <link rel="stylesheet" href="./assets/css/twentytwenty.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<!-- title -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title"><span style="color:#70b5df; font-weight: bold;">Video</span><span style="color:#FFA07A; font-weight: bold;">Elevator</span> : Elevating Video Generation Quality with Versatile Text-to-Image Diffusion Models</h1>
+        <div class="is-size-5 publication-authors">
+          <span class="author-block">Anonymity</span>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Teaser video-->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video preload="auto" muted autoplay="autoplay" loop="loop" poster="" id="tree"  width="852px" outline="0px"> 
+        <!-- Your video -->
+        <source src="videos/project_teaser.mp4"
+        type="video/mp4">
+      </video>
+      <!-- <h2 class="subtitle has-text-centered"> 
+      </h2> -->
+    </div>
+  </div> 
+</section>
+<!-- End teaser video -->
+
+
+<!-- Abstract. -->
+<section class="hero is-light">
+  <div class="container is-max-desktop ">
+    <div class="columns is-centered has-text-centered" style="margin-top: 10px; margin-bottom: 0px;">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Text-to-image diffusion models (IDMs) have demonstrated unprecedented capabilities in creating realistic and aesthetic images. However, text-to-video diffusion models (VDMs) still lag far behind in frame quality and text alignment, owing to insufficient quality and quantity of training videos. In this paper, we introduce VideoElevator, a training-free and plug-and-play method, which elevates the performance of VDMs using superior capabilities of IDMs. Different from conventional VDM sampling (i.e., temporal and spatial modeling), VideoElevator explicitly decomposes each sampling step into temporal motion refining and spatial quality elevating. Given noise latent at timestep t, temporal motion refining uses encapsulated VDM to enhance temporal consistency, followed by inverting it to the noise distribution required by IDM. Then, spatial quality elevating harnesses inflated IDM to directly transition to less noisy latent, adding more photo-realistic details. We have conducted experiments in extensive prompts under the combination of various VDMs and IDMs. The results show that VideoElevator not only improves the performance of VDM baselines with foundational IDMs, but also facilitates stylistic video synthesis with personalized IDMs.
+          </p>
+        </div>
+      </div>
+    </div>
+</section>
+<!--/ Abstract. -->
+
+<!--/ Key idea. -->
+<section class="section" style="margin-top:-50px; margin-bottom:-50px;">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+        <div class="section-title has-text-centered">
+          <h2 class="title is-3 is-centered">VideoElevator for improved T2V generation</h2>
+        </div>
+        <div class="columns is-centered has-text-centered">
+          <div class="column">
+            <div class="publication-img">
+              <img id="architecture" src="./assets/images/method.png" style="width:1000px; margin-top:10px;margin-bottom:10px;"/>
+            </div>
+          </div>
+        </div>
+        <p>
+          <b>Top: </b>Taking text &tau; as input, conventional VDM performs both temporal and spatial modeling and accumulates low-quality contents throughout sampling chain.<br>
+          <b>Bottom: </b>VideoElevator explicitly decompose each step into <em>temporal motion refining</em> and <em>spatial quality elevating</em>, where the former encapsulates VDM to enhance temporal consistency and the latter harnesses IDM to provide more faithful details, <em>e.g.</em>, <span style="color:#FFA07A; font-weight: bold;">dressed in suit</span>. Empirically, applying VDM in several timesteps is enough to ensure temporal consistency.
+        </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- Results with foundational IDMs -->
+<section class="hero is-light is-small">
+  
+  <div class="hero-body">
+    <!-- <div class="container"> -->
+    <div class="container is-max-desktop"  style="margin-top:30px;">
+      <div class="section-title has-text-centered">
+        <h2 class="title is-3">Results enhanced with foundational IDMs</h2>
+      </div>
+
+      <h2 class="subtitle has-text-centered"><br>We use Stable Diffusion V1.5 and V2.1-base to enhance VDM baselines.</h2>
+
+      <div class="section-title has-text-centered">
+        <h2 class="title is-4">1. Comparisons with Zeroscope</h2>
+      </div>
+
+      
+      <div id="results-carousel" class="carousel results-carousel">
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A cat wearing sunglasses and working as a lifeguard at a pool.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_Base/Zeroscope+SDv15/A_cat_wearing_sunglasses_and_working_as_a_lifeguard_at_a_pool..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_Base/Zeroscope+SDv15/ours+A_cat_wearing_sunglasses_and_working_as_a_lifeguard_at_a_pool..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Hulk wearing virtual reality goggles, 4k, high resolution.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/Zeroscope+SDv15/Hulk_wearing_virtual_reality_goggles,_4k,_high_resolution..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/Zeroscope+SDv15/ours+Hulk_wearing_virtual_reality_goggles,_4k,_high_resolution..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>
+        
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Monkey learning to play the piano.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/Zeroscope+SDv15/Monkey_learning_to_play_the_piano..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/Zeroscope+SDv15/ours+Monkey_learning_to_play_the_piano..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Time lapse at the snow land with aurora in the sky.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/Zeroscope+SDv21base/Time_lapse_at_the_snow_land_with_aurora_in_the_sky,_4k,_high_resolution..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/Zeroscope+SDv21base/ours+Time_lapse_at_the_snow_land_with_aurora_in_the_sky,_4k,_high_resolution..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div> 
+        
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Photo of a cat singing in a barbershop quartet.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/Zeroscope+SDv21base/Photo_of_a_cat_singing_in_a_barbershop_quartet..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/Zeroscope+SDv21base/ours+Photo_of_a_cat_singing_in_a_barbershop_quartet..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>   
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Video of yacht sailing in the ocean.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_Base/Zeroscope+SDv21base/video_of_yacht_sailing_in_the_ocean.mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_Base/Zeroscope+SDv21base/ours+video_of_yacht_sailing_in_the_ocean.mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>  
+
+      </div>
+
+      <div class="section-title has-text-centered">
+        <h2 class="title is-4"><br>2. Comparisons with AnimateDiff</h2>
+      </div>
+
+      
+      <div id="results-carousel" class="carousel results-carousel">
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A young couple walking in a heavy rain.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_Base/AnimateDiff+SDv15/A_young_couple_walking_in_a_heavy_rain..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_Base/AnimateDiff+SDv15/ours+A_young_couple_walking_in_a_heavy_rain..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Beer pouring into glass, low angle video shot.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/AnimateDiff+SDv15/Beer_pouring_into_glass,_low_angle_video_shot..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/AnimateDiff+SDv15/ours+Beer_pouring_into_glass,_low_angle_video_shot..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>
+        
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Firewood burning in dark room.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/AnimateDiff+SDv15/firewood_burning_in_dark_room.mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/AnimateDiff+SDv15/ours+firewood_burning_in_dark_room.mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>
+
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Waves crashing against a lone lighthouse, ominous lighting.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/AnimateDiff+SDv21base/Waves_crashing_against_a_lone_lighthouse,_ominous_lighting..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/AnimateDiff+SDv21base/ours+Waves_crashing_against_a_lone_lighthouse,_ominous_lighting..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>
+        
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">A pancake tower with chocolate syrup and strawberries on top.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/AnimateDiff+SDv21base/a_pancake_tower_with_chocolate_syrup_and_strawberries_on_top.mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/AnimateDiff+SDv21base/ours+a_pancake_tower_with_chocolate_syrup_and_strawberries_on_top.mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>  
+            <div class="item">
+              <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                <div class="desc">An african penguin walking on a beach.</div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_Base/AnimateDiff+SDv21base/an_african_penguin_walking_on_a_beach.mp4" type="video/mp4">
+                  </video> 
+                </div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_Base/AnimateDiff+SDv21base/ours+an_african_penguin_walking_on_a_beach.mp4" type="video/mp4">
+                  </video> 
+                </div>
+              </div>
+            </div>    
+
+      </div>
+
+      <div class="section-title has-text-centered">
+        <h2 class="title is-4"><br>3. Comparisons with LaVie</h2>
+      </div>
+
+      
+      <div id="results-carousel" class="carousel results-carousel">
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A stack of dried leaves burning in a forest.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_Base/LaVie+SDv15/a_stack_of_dried_leaves_burning_in_a_forest.mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_Base/LaVie+SDv15/ours+a_stack_of_dried_leaves_burning_in_a_forest.mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Fireworks display in the sky at night.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/LaVie+SDv15/fireworks_display_in_the_sky_at_night.mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/LaVie+SDv15/ours+fireworks_display_in_the_sky_at_night.mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>
+        
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Sailboat sailing on a sunny day in a mountain lake.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/LaVie+SDv15/Sailboat_sailing_on_a_sunny_day_in_a_mountain_lake..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/LaVie+SDv15/ours+Sailboat_sailing_on_a_sunny_day_in_a_mountain_lake..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>
+        
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">A blue unicorn flying over a mystical land.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/LaVie+SDv21base/A_blue_unicorn_flying_over_a_mystical_land..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_Base/LaVie+SDv21base/ours+A_blue_unicorn_flying_over_a_mystical_land..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>  
+            <div class="item">
+              <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                <div class="desc">A fire dragon breathing, trending on artstation, slow motion.</div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_Base/LaVie+SDv21base/A_fire_dragon_breathing,_trending_on_artstation,_slow_motion..mp4" type="video/mp4">
+                  </video> 
+                </div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_Base/LaVie+SDv21base/ours+A_fire_dragon_breathing,_trending_on_artstation,_slow_motion..mp4" type="video/mp4">
+                  </video> 
+                </div>
+              </div>
+            </div>  
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">A seagull walking on shore.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_Base/LaVie+SDv21base/a_seagull_walking_on_shore.mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_Base/LaVie+SDv21base/ours+a_seagull_walking_on_shore.mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>  
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results with personalized IDMs -->
+<section class="hero is-light is-small">
+  
+  <div class="hero-body">
+    <!-- <div class="container"> -->
+    <div class="container is-max-desktop"  style="margin-top:30px;">
+      <div class="section-title has-text-centered">
+        <h2 class="title is-3">Results enhanced with personalized IDMs</h2>
+      </div>
+
+      <h2 class="subtitle has-text-centered"><br>We use multiple personalized IDMs to enhance VDM baselines, including Lyriel, RCNZCartoon3d, RealisticVision, and ToonYou.</h2>
+
+      <div class="section-title has-text-centered">
+        <h2 class="title is-4">1. Comparisons with Zeroscope</h2>
+      </div>
+
+      
+      <div id="results-carousel" class="carousel results-carousel">
+
+        
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A panda standing on a surfboard in the ocean in sunset.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+          <source src="videos/VDM+IDM_LoRA/ZeroScope+reallisticVisionV60B1_v51VAE/A_panda_standing_on_a_surfboard_in_the_ocean_in_sunset,_4k,_high_resolution..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+          <source src="videos/VDM+IDM_LoRA/ZeroScope+reallisticVisionV60B1_v51VAE/ours+A_panda_standing_on_a_surfboard_in_the_ocean_in_sunset,_4k,_high_resolution..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+        
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A polar bear is playing bass guitar in snow.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+          <source src="videos/VDM+IDM_LoRA/ZeroScope+reallisticVisionV60B1_v51VAE/A_polar_bear_is_playing_bass_guitar_in_snow,_4k,_high_resolution..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+          <source src="videos/VDM+IDM_LoRA/ZeroScope+reallisticVisionV60B1_v51VAE/ours+A_polar_bear_is_playing_bass_guitar_in_snow,_4k,_high_resolution..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>   
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A raccoon dressed in suit playing the trumpet.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+          <source src="videos/VDM+IDM_LoRA/ZeroScope+reallisticVisionV60B1_v51VAE/A_raccoon_dressed_in_suit_playing_the_trumpet,_stage_background,_4k,_high_resolution..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+          <source src="videos/VDM+IDM_LoRA/ZeroScope+reallisticVisionV60B1_v51VAE/ours+A_raccoon_dressed_in_suit_playing_the_trumpet,_stage_background,_4k,_high_resolution..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">Low angle of pouring beer into a glass cup.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+rcnzCartoon3d_v20/Low_angle_of_pouring_beer_into_a_glass_cup..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+rcnzCartoon3d_v20/ours+Low_angle_of_pouring_beer_into_a_glass_cup..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>  
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Milk dripping into a cup of coffee.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+rcnzCartoon3d_v20/Milk_dripping_into_a_cup_of_coffee,_high_definition,_4k..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+rcnzCartoon3d_v20/ours+Milk_dripping_into_a_cup_of_coffee,_high_definition,_4k..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>  
+
+            <div class="item">
+              <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                <div class="desc">Waves crashing against a lone lighthouse, ominous lighting.</div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+rcnzCartoon3d_v20/Waves_crashing_against_a_lone_lighthouse,_ominous_lighting..mp4" type="video/mp4">
+                  </video> 
+                </div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+rcnzCartoon3d_v20/ours+Waves_crashing_against_a_lone_lighthouse,_ominous_lighting..mp4" type="video/mp4">
+                  </video> 
+                </div>
+              </div>
+            </div>
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A teddy bear is playing the electric guitar.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+lyriel_v16/A_teddy_bear_is_playing_the_electric_guitar,_high_definition,_4k..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+lyriel_v16/ours+A_teddy_bear_is_playing_the_electric_guitar,_high_definition,_4k..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Hulk wearing virtual reality goggles.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+lyriel_v16/Hulk_wearing_virtual_reality_goggles,_4k,_high_resolution..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+lyriel_v16/ours+Hulk_wearing_virtual_reality_goggles,_4k,_high_resolution..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>
+        
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">Wood on fire.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+lyriel_v16/Wood_on_fire..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+IDM_LoRA/ZeroScope+lyriel_v16/ours+Wood_on_fire..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>   
+
+      </div>
+
+      <div class="section-title has-text-centered">
+        <h2 class="title is-4"><br>2. Comparisons with AnimateDiff</h2>
+      </div>
+
+      
+      <div id="results-carousel" class="carousel results-carousel">
+        
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">A fire dragon breathing, trending on artstation, slow motion.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+rcnzCartoon3d_v20/A_fire_dragon_breathing,_trending_on_artstation,_slow_motion..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+rcnzCartoon3d_v20/ours+A_fire_dragon_breathing,_trending_on_artstation,_slow_motion..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>  
+            <div class="item">
+              <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                <div class="desc">A teddy bear painting a portrait.</div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+rcnzCartoon3d_v20/A_teddy_bear_painting_a_portrait..mp4" type="video/mp4">
+                  </video> 
+                </div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+rcnzCartoon3d_v20/ours+A_teddy_bear_painting_a_portrait..mp4" type="video/mp4">
+                  </video> 
+                </div>
+              </div>
+            </div>  
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">A ufo hovering over aliens in a field.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+rcnzCartoon3d_v20/A_ufo_hovering_over_aliens_in_a_field..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+rcnzCartoon3d_v20/ours+A_ufo_hovering_over_aliens_in_a_field..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>  
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Clown fish swimming through the coral reef.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+realisticVisionV60B1_v51VAE/Clown_fish_swimming_through_the_coral_reef..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+realisticVisionV60B1_v51VAE/ours+Clown_fish_swimming_through_the_coral_reef..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Sunset time lapse at the beach with moving clouds and colors in the sky.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+realisticVisionV60B1_v51VAE/Sunset_time_lapse_at_the_beach_with_moving_clouds_and_colors_in_the_sky,_4k,_high_resolution..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+realisticVisionV60B1_v51VAE/ours+Sunset_time_lapse_at_the_beach_with_moving_clouds_and_colors_in_the_sky,_4k,_high_resolution..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Low angle of pouring beer into a glass cup.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+realisticVisionV60B1_v51VAE/Low_angle_of_pouring_beer_into_a_glass_cup..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+IDM_LoRA/AnimateDiff+realisticVisionV60B1_v51VAE/ours+Low_angle_of_pouring_beer_into_a_glass_cup..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">An animated painting of fluffy white clouds moving in sky.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/AnimateDiff+lyriel_v16/An_animated_painting_of_fluffy_white_clouds_moving_in_sky..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/AnimateDiff+lyriel_v16/ours+An_animated_painting_of_fluffy_white_clouds_moving_in_sky..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+      
+              <div class="item">
+                  <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                    <div class="desc">Sunset time lapse at the beach with moving clouds and colors in the sky.</div>
+                    <div class="video">
+                      <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/AnimateDiff+lyriel_v16/Sunset_time_lapse_at_the_beach_with_moving_clouds_and_colors_in_the_sky,_4k,_high_resolution..mp4" type="video/mp4">
+                      </video> 
+                    </div>
+                    <div class="video">
+                      <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/AnimateDiff+lyriel_v16/ours+Sunset_time_lapse_at_the_beach_with_moving_clouds_and_colors_in_the_sky,_4k,_high_resolution..mp4" type="video/mp4">
+                      </video> 
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="item">
+                  <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                    <div class="desc">Wood on fire.</div>
+                    <div class="video">
+                      <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/AnimateDiff+lyriel_v16/Wood_on_fire..mp4" type="video/mp4">
+                      </video> 
+                    </div>
+                    <div class="video">
+                      <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/AnimateDiff+lyriel_v16/ours+Wood_on_fire..mp4" type="video/mp4">
+                      </video> 
+                    </div>
+                  </div>
+                </div>
+
+      </div>
+
+      <div class="section-title has-text-centered">
+        <h2 class="title is-4"><br>3. Comparisons with LaVie</h2>
+      </div>
+
+      
+      <div id="results-carousel" class="carousel results-carousel">
+
+          <div class="item">
+            <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+              <div class="desc">A cute happy Corgi playing in park, sunset.</div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_LoRA/LaVie+rcnzCartoon3d_v20/A_cute_happy_Corgi_playing_in_park,_sunset,_4k..mp4" type="video/mp4">
+                </video> 
+              </div>
+              <div class="video">
+                <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_LoRA/LaVie+rcnzCartoon3d_v20/ours+A_cute_happy_Corgi_playing_in_park,_sunset,_4k..mp4" type="video/mp4">
+                </video> 
+              </div>
+            </div>
+          </div>  
+            <div class="item">
+              <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                <div class="desc">Time lapse at a fantasy landscape.</div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_LoRA/LaVie+rcnzCartoon3d_v20/Time_lapse_at_a_fantasy_landscape,_4k,_high_resolution..mp4" type="video/mp4">
+                  </video> 
+                </div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                <source src="videos/VDM+IDM_LoRA/LaVie+rcnzCartoon3d_v20/ours+Time_lapse_at_a_fantasy_landscape,_4k,_high_resolution..mp4" type="video/mp4">
+                  </video> 
+                </div>
+              </div>
+            </div>  
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Yellow flowers swing in wind.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+rcnzCartoon3d_v20/Yellow_flowers_swing_in_wind..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+rcnzCartoon3d_v20/ours+Yellow_flowers_swing_in_wind..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Milk dripping into a cup of coffee.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+realisticVisionV60B1_v51VAE/Milk_dripping_into_a_cup_of_coffee,_high_definition,_4k..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+realisticVisionV60B1_v51VAE/ours+Milk_dripping_into_a_cup_of_coffee,_high_definition,_4k..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div> 
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Teddy bear walking down 5th Avenue, front view, beautiful sunset.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+realisticVisionV60B1_v51VAE/Teddy_bear_walking_down_5th_Avenue,_front_view,_beautiful_sunset,_close_up,_high_definition,_4k..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+realisticVisionV60B1_v51VAE/ours+Teddy_bear_walking_down_5th_Avenue,_front_view,_beautiful_sunset,_close_up,_high_definition,_4k..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Waves crashing against a lone lighthouse, ominous lighting.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+realisticVisionV60B1_v51VAE/Waves_crashing_against_a_lone_lighthouse,_ominous_lighting..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+realisticVisionV60B1_v51VAE/ours+Waves_crashing_against_a_lone_lighthouse,_ominous_lighting..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">A big moon rises on top of Toronto city.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+toonyou_beta6/A_big_moon_rises_on_top_of_Toronto_city..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+toonyou_beta6/ours+A_big_moon_rises_on_top_of_Toronto_city..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">A burning volcano.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+toonyou_beta6/A_burning_volcano..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+toonyou_beta6/ours+A_burning_volcano..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Wood on fire.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+toonyou_beta6/Wood_on_fire..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                      <source src="videos/VDM+IDM_LoRA/LaVie+toonyou_beta6/ours+Wood_on_fire..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">An astronaut cooking with a pan and fire in the kitchen.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/LaVie+lyriel_v16/An_astronaut_cooking_with_a_pan_and_fire_in_the_kitchen,_high_definition,_4k..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/LaVie+lyriel_v16/ours+An_astronaut_cooking_with_a_pan_and_fire_in_the_kitchen,_high_definition,_4k..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>
+      
+              <div class="item">
+                  <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                    <div class="desc">Fireworks.</div>
+                    <div class="video">
+                      <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/LaVie+lyriel_v16/Fireworks..mp4" type="video/mp4">
+                      </video> 
+                    </div>
+                    <div class="video">
+                      <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/LaVie+lyriel_v16/ours+Fireworks..mp4" type="video/mp4">
+                      </video> 
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="item">
+                  <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                    <div class="desc">Ironman flying over a burning city, very detailed surroundings, cities are blazing.</div>
+                    <div class="video">
+                      <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/LaVie+lyriel_v16/Ironman_flying_over_a_burning_city,_very_detailed_surroundings,_cities_are_blazing,_shiny_iron_man_suit,_realistic,_4k_ultra_high_definition..mp4" type="video/mp4">
+                  </video> 
+                    </div>
+                    <div class="video">
+                      <video muted autoplay="autoplay" loop="loop" width="100%">
+                    <source src="videos/VDM+IDM_LoRA/LaVie+lyriel_v16/ours+Ironman_flying_over_a_burning_city,_very_detailed_surroundings,_cities_are_blazing,_shiny_iron_man_suit,_realistic,_4k_ultra_high_definition..mp4" type="video/mp4">
+                      </video> 
+                    </div>
+                  </div>
+                </div>
+              
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results with personalized SDXL -->
+<section class="section">
+  
+  <div class="hero-body">
+    <div class="container">
+    <!-- <div class="container is-max-desktop"  style="margin-top:30px;"> -->
+      <div class="section-title has-text-centered">
+        <h2 class="title is-3">Results enhanced with personalized SDXL</h2>
+      </div>
+
+      <h2 class="subtitle has-text-centered"><br>We take AnimateDiff XL as baseline and use DynaVision and Diffusion-DPO to enhance it.</h2>
+      
+      <div id="results-carousel" class="carousel results-carousel">
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A dog swimming.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+SDXL/LoRA/A_dog_swimming..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+SDXL/LoRA/ours+A_dog_swimming..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">A ufo hovering over aliens in a field.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+SDXL/LoRA/A_ufo_hovering_over_aliens_in_a_field..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+SDXL/LoRA/ours+A_ufo_hovering_over_aliens_in_a_field..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">Fireworks.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+SDXL/LoRA/Fireworks..mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+SDXL/LoRA/ours+Fireworks..mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+        
+          <div class="item">
+          <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+            <div class="desc">Microscopic image of kute mini white mouse with yellow Christmas hat and scarf with icicles snowball.</div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+SDXL/LoRA/Microscopic_image_of_kute_mini_white_mouse_with_yellow_Christmas_hat_and_scarf_with_icicles_snowball.mp4" type="video/mp4">
+              </video> 
+            </div>
+            <div class="video">
+              <video muted autoplay="autoplay" loop="loop" width="100%">
+              <source src="videos/VDM+SDXL/LoRA/ours+Microscopic_image_of_kute_mini_white_mouse_with_yellow_Christmas_hat_and_scarf_with_icicles_snowball.mp4" type="video/mp4">
+              </video> 
+            </div>
+          </div>
+        </div>
+            <div class="item">
+              <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                <div class="desc">An astronaut riding a horse in sunset.</div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+SDXL/DPO/An_astronaut_riding_a_horse_in_sunset,_4k,_high_resolution..mp4" type="video/mp4">
+                  </video> 
+                </div>
+                <div class="video">
+                  <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+SDXL/DPO/ours+An_astronaut_riding_a_horse_in_sunset,_4k,_high_resolution..mp4" type="video/mp4">
+                  </video> 
+                </div>
+              </div>
+            </div>  
+
+              <div class="item">
+                <div class="twentytwenty-container" data-orientation="horizontal" ratio="1">
+                  <div class="desc">Robot dancing in times square.</div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+SDXL/DPO/Robot_dancing_in_times_square..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                  <div class="video">
+                    <video muted autoplay="autoplay" loop="loop" width="100%">
+                  <source src="videos/VDM+SDXL/DPO/ours+Robot_dancing_in_times_square..mp4" type="video/mp4">
+                    </video> 
+                  </div>
+                </div>
+              </div>  
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Ablation studies -->
+<section class="hero is-light is-small">
+  
+  <div class="hero-body">
+    <div class="container">
+    <!-- <div class="container is-max-desktop"  style="margin-top:30px;"> -->
+      <div class="section-title has-text-centered">
+        <h2 class="title is-3">Ablation studies</h2>
+      </div>
+
+      <div class="section-title has-text-centered">
+        <h2 class="title is-4"><br>1. Effect of low-pass frequency filter</h2>
+      </div>
+      <h2 class="subtitle has-text-centered"><br>Prompt: A polar bear is playing bass guitar in snow.</h2>
+
+      <table  width="930" align="center">
+        <tbody>
+            <tr>
+                <th style="font-size: 20px" align="center">(a) w/o LPFF</th>
+                <th style="font-size: 20px" align="center">(b) Temporal LPFF (Ours)</th>
+                <th style="font-size: 20px" align="center">(c) Spatial-Temporal LPFF</th>
+            </tr>
+            <tr>
+              <th> <video  width="300" src="videos/Ablation_Study/low-pass_filter/woLPFF+A_polar_bear_is_playing_bass_guitar_in_snow,_4k,_high_resolution..mp4" autoplay loop controls muted></video> </th>
+              <th> <video  width="300" src="videos/Ablation_Study/low-pass_filter/Temporal+A_polar_bear_is_playing_bass_guitar_in_snow,_4k,_high_resolution..mp4" autoplay loop controls muted></video> </th>
+              <th> <video  width="300" src="videos/Ablation_Study/low-pass_filter/SpatialTemporal+A_polar_bear_is_playing_bass_guitar_in_snow,_4k,_high_resolution..mp4" autoplay loop controls muted></video> </th>
+              </tr>
+            <tr> <td><br /></td> </tr>
+      
+        </tbody>
+      </table>
+
+      <div class="section-title has-text-centered">
+        <h2 class="title is-4"><br>2. Effect of inversion strategies</h2>
+      </div>
+      <h2 class="subtitle has-text-centered"><br>Prompt: A raccoon dressed in suit playing the trumpet.</h2>
+
+      <table  width="930" align="center">
+        <tbody>
+            <tr>
+                <th style="font-size: 20px" align="center">(a) Add same noise</th>
+                <th style="font-size: 20px" align="center">(b) Add random noise</th>
+                <th style="font-size: 20px" align="center">(c) DDIM inversion</th>
+            </tr>
+            <tr>
+              <th> <video  width="300" src="videos/Ablation_Study/inversion_strategy/same_noise+A_raccoon_dressed_in_suit_playing_the_trumpet,_stage_background,_4k,_high_resolution..mp4" autoplay loop controls muted></video> </th>
+              <th> <video  width="300" src="videos/Ablation_Study/inversion_strategy/random_noise+A_raccoon_dressed_in_suit_playing_the_trumpet,_stage_background,_4k,_high_resolution..mp4" autoplay loop controls muted></video> </th>
+              <th> <video  width="300" src="videos/Ablation_Study/inversion_strategy/DDIM+A_raccoon_dressed_in_suit_playing_the_trumpet,_stage_background,_4k,_high_resolution..mp4" autoplay loop controls muted></video> </th>
+              </tr>
+            <tr> <td><br /></td> </tr>
+      
+        </tbody>
+      </table>
+
+</div>
+</div>
+</section>
+<!-- footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website source code based on the <a href="https://nerfies.github.io/"> Nerfies</a> project page. If you want to reuse their <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a>, please credit them appropriately.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container", style="width: 20%">
+    <script type="text/javascript" id="clustrmaps" src="//clustrmaps.com/map_v2.js?d=P8Xfm_38OsgZnaqtwbnM9AC8Lhe2MQpZ4lIswi1SB3Y&cl=ffffff&w=a"></script>
+  </div>
+</footer>
+
+<!-- custom js file  -->
+<!-- <script defer src="./assets/js/fontawesome.all.min.js"></script> -->
+<script src="./assets/js/bulma-carousel.min.js"></script>
+<script src="./assets/js/bulma-slider.min.js"></script>
+<script src="./assets/js/index.js"></script>
+<script src="./assets/js/jquery.event.move.js"></script>
+<script src="./assets/js/jquery.twentytwenty.js"></script>
+<script>
+$(function(){
+  $(".twentytwenty-container").twentytwenty();
+  // $(".twentytwenty-container", "#results-carousel").twentytwenty({default_offset_pct: 0.5, ratio: 0.5});
+});
+</script>
+
+</body>
+</html>
